@@ -1,6 +1,7 @@
 package com.example.associate.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,8 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
 
 
     private final LayoutInflater mInflater;
-    private List<Word> mWords; // Cached copy of words
+    private List<Word> mWords;
+    private final String LOGVALUE=WordListAdapter.class.getSimpleName();
 
     public WordListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
@@ -35,10 +37,11 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
         } else {
             // Covers the case of data not being ready yet.
             holder.wordItemView.setText("No Word");
+           Log.e(LOGVALUE,"Na value for word");
         }
     }
 
-    void setWords(List<Word> words){
+    public void setWords(List<Word> words){
         mWords = words;
         notifyDataSetChanged();
     }

@@ -22,7 +22,7 @@ public abstract class WordRoomDatabase extends RoomDatabase {
             INSTANCE= Room.databaseBuilder(context.getApplicationContext(),
                     WordRoomDatabase.class,"word_database")
                     .fallbackToDestructiveMigration()
-                    .addCallback(sRoomDatabaseCallback)
+
                     .build();
         }
         return  INSTANCE;
