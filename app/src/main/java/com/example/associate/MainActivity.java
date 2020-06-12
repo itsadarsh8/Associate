@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.solver.widgets.ResolutionDimension;
 import androidx.core.app.ShareCompat;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.associate.Adapter.WordListAdapter;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final WordListAdapter adapter = new WordListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 }
