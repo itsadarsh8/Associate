@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.associate.Object.Word;
 
-@Database(entities = {Word.class},version = 1,exportSchema = false)
+@Database(entities = {Word.class},version = 2,exportSchema = false)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
     public abstract WordDao wordDao();
@@ -22,7 +22,7 @@ public abstract class WordRoomDatabase extends RoomDatabase {
             INSTANCE= Room.databaseBuilder(context.getApplicationContext(),
                     WordRoomDatabase.class,"word_database")
                     .fallbackToDestructiveMigration()
-
+                    .addCallback(sRoomDatabaseCallback)
                     .build();
         }
         return  INSTANCE;

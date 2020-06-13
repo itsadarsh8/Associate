@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private WordViewModel mWordViewModel;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static final int UPDATE_WORD_ACTIVITY_REQUEST_CODE = 2;
     private final String LOGVALUE = MainActivity.class.getSimpleName();
-    public static final String UPDATEINTENT = "com.example.associate.MainActivity.UPDATEINTENT";
+    public static final String UPDATE_INTENT = "com.example.associate.MainActivity.UPDATEINTENT";
+    public static final String UPDATE_ID = "com.example.associate.MainActivity.UPDATE_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewWordActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,NEW_WORD_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                         int position = viewHolder.getAdapterPosition();
                         Word myWord = adapter.getWordAtPosition(position);
                         Toast.makeText(MainActivity.this, "Deleting " +
-                                myWord.getWord(), Toast.LENGTH_LONG).show();
+                                myWord.getWord(), Toast.LENGTH_SHORT).show();
 
                         // Delete the word
                         mWordViewModel.deleteWord(myWord);
@@ -99,8 +101,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Word word = adapter.getWordAtPosition(position);
                 Intent updateIntent = new Intent(MainActivity.this, NewWordActivity.class);
-                updateIntent.putExtra(UPDATEINTENT, word.getWord());
-                startActivity(updateIntent);
+                updateIntent.putExtra(UPDATE_INTENT, word.getWord());
+                updateIntent.putExtra(UPDATE_ID,word.getId());
+                startActivityForResult(updateIntent,UPDATE_WORD_ACTIVITY_REQUEST_CODE);
             }
         });
     }
@@ -108,13 +111,34 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
             // Save the data
             mWordViewModel.insert(word);
-        } else {
             Toast.makeText(
-                    this, "Unable to save", Toast.LENGTH_LONG).show();
+                    this, "Saved", Toast.LENGTH_SHORT).show();
+        }
+        else if(requestCode==UPDATE_WORD_ACTIVITY_REQUEST_CODE && resultCode==RESULT_OK){
+            String word=data.getStringExtra(NewWordActivity.EXTRA_REPLY);
+            int id=data.getIntExtra(NewWordActivity.EXTRA_REPLY_ID,-1);
+
+            if(id!=-1){
+                Word update_word=new Word(id,word);
+                mWordViewModel.updateWord(update_word);
+                Toast.makeText(this,"Updating...",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this,"Unable to update...",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        else {
+            Toast.makeText(
+                    this, "Nothing to save", Toast.LENGTH_LONG).show();
         }
     }
 }
