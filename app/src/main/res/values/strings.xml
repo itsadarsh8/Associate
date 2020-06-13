@@ -2,4 +2,5 @@
     <string name="app_name">Associate</string>
     <string name="enter_new_word">Enter new word</string>
     <string name="save">Save</string>
+    <string name="clear_all">Clear All</string>
 </resources>

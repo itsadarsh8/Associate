@@ -24,6 +24,8 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -106,6 +108,24 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(updateIntent,UPDATE_WORD_ACTIVITY_REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int item_id=item.getItemId();
+        switch(item_id){
+            case R.id.delete_all:mWordViewModel.deleteAll();
+            break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
