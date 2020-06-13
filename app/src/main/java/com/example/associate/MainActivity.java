@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     public static final int UPDATE_WORD_ACTIVITY_REQUEST_CODE = 2;
-    private final String LOGVALUE = MainActivity.class.getSimpleName();
+    private final String LOG_VALUE = MainActivity.class.getSimpleName();
     public static final String UPDATE_INTENT = "com.example.associate.MainActivity.UPDATEINTENT";
     public static final String UPDATE_ID = "com.example.associate.MainActivity.UPDATE_ID";
 

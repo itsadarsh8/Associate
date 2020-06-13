@@ -6,6 +6,12 @@
     android:orientation="vertical"
     android:padding="24dp">
 
+    <ToggleButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmToggle"
+        style="@style/text_view_style"/>
+
     <EditText
         android:id="@+id/edit_word"
         style="@style/text_view_style"
