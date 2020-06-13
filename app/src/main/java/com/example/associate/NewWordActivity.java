@@ -19,22 +19,27 @@ import com.example.associate.Object.Word;
 public class NewWordActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY =
-            "com.example.android.roomwordssample.REPLY";
+            "com.example.android.NewWordActivity.ADD";
 
     private  EditText mEditWordView;
-    private WordViewModel mWordViewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_word);
         mEditWordView = findViewById(R.id.edit_word);
-        Button button = findViewById(R.id.button_save);
-        mWordViewModel=new WordViewModel(getApplication());
+       final Button button = findViewById(R.id.button_save);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Word word=new Word(mEditWordView.getText().toString());
-                mWordViewModel.insert(word);
-                finish();
+              Intent addIntent=new Intent();
+              if(TextUtils.isEmpty(mEditWordView.getText().toString())){
+                  setResult(RESULT_CANCELED,addIntent);
+              }
+              else{
+                  String word=mEditWordView.getText().toString();
+                  addIntent.putExtra(EXTRA_REPLY,word);
+                  setResult(RESULT_OK,addIntent);
+              }
+              finish();
             }
 
         });

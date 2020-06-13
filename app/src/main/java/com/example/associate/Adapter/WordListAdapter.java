@@ -20,6 +20,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
     private final LayoutInflater mInflater;
     private List<Word> mWords;
     private final String LOGVALUE=WordListAdapter.class.getSimpleName();
+    private static ClickListener clickListener;
 
     public WordListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
@@ -39,6 +40,8 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
             holder.wordItemView.setText("No Word");
            Log.e(LOGVALUE,"Na value for word");
         }
+
+
     }
 
     public void setWords(List<Word> words){
@@ -55,12 +58,32 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
         else return 0;
     }
 
+    public Word getWordAtPosition (int position) {
+        return mWords.get(position);
+    }
+
     class WordViewHolder extends RecyclerView.ViewHolder {
         private final TextView wordItemView;
 
         private WordViewHolder(View itemView) {
             super(itemView);
             wordItemView = itemView.findViewById(R.id.textView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onItemClick(view,getAdapterPosition());
+                }
+            });
         }
+    }
+
+
+    public void setOnItemClickListener(ClickListener clickListener){
+        this.clickListener=clickListener;
+    }
+
+    public interface ClickListener{
+        void onItemClick(View view, int position);
     }
 }

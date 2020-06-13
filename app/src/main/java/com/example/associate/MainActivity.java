@@ -1,5 +1,6 @@
 package com.example.associate;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import androidx.core.app.ShareCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private WordViewModel mWordViewModel;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
-    private final String LOGVALUE=MainActivity.class.getSimpleName();
+    private final String LOGVALUE = MainActivity.class.getSimpleName();
+    public static final String UPDATEINTENT = "com.example.associate.MainActivity.UPDATEINTENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        Word myWord = adapter.getWordAtPosition(position);
+                        Toast.makeText(MainActivity.this, "Deleting " +
+                                myWord.getWord(), Toast.LENGTH_LONG).show();
+
+                        // Delete the word
+                        mWordViewModel.deleteWord(myWord);
+                    }
+                });
+        helper.attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(new WordListAdapter.ClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Word word = adapter.getWordAtPosition(position);
+                Intent updateIntent = new Intent(MainActivity.this, NewWordActivity.class);
+                updateIntent.putExtra(UPDATEINTENT, word.getWord());
+                startActivity(updateIntent);
+            }
+        });
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
+            // Save the data
+            mWordViewModel.insert(word);
+        } else {
+            Toast.makeText(
+                    this, "Unable to save", Toast.LENGTH_LONG).show();
+        }
+    }
 }
