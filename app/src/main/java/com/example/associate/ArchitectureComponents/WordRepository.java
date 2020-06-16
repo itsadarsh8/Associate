@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 import com.example.associate.Object.Word;
 
@@ -11,15 +13,15 @@ import java.util.List;
 
 public class WordRepository {
     private WordDao mWordDao;
-    private LiveData<List<Word>> mAllWords;
+    private LiveData<PagedList<Word>> mAllWords;
 
     WordRepository(Application application){
         WordRoomDatabase db=WordRoomDatabase.getDatabase(application);
         mWordDao=db.wordDao();
-        mAllWords=mWordDao.getAll();
+        mAllWords=new LivePagedListBuilder<>(mWordDao.getAll(),10).build();
     }
 
-    public LiveData<List<Word>> getAllWords() {
+    public LiveData<PagedList<Word>> getAllWords() {
         return mAllWords;
     }
 

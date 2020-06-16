@@ -86,4 +86,6 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
     public interface ClickListener{
         void onItemClick(View view, int position);
     }
+
+
 }

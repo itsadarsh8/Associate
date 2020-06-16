@@ -34,6 +34,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
+    implementation "androidx.paging:paging-runtime:2.1.2"
 
     // Room components
     implementation "android.arch.persistence.room:runtime:1.1.1"

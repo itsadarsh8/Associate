@@ -1,6 +1,7 @@
 package com.example.associate.ArchitectureComponents;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -28,5 +29,5 @@ public interface WordDao {
     void update(Word word);
 
     @Query("SELECT * FROM word_table ORDER BY word ASC")
-    LiveData<List<Word>> getAll();
+    DataSource.Factory<Integer,Word> getAll();
 }

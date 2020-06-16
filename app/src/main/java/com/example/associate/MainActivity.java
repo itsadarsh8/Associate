@@ -8,7 +8,9 @@ import androidx.constraintlayout.solver.widgets.ResolutionDimension;
 import androidx.core.app.ShareCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.associate.Adapter.WordListAdapter;
+import com.example.associate.Adapter.WordPageListAdapter;
 import com.example.associate.ArchitectureComponents.WordViewModel;
 import com.example.associate.Object.Word;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -57,8 +60,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final WordListAdapter adapter = new WordListAdapter(this);
-        recyclerView.setAdapter(adapter);
+      //  final WordListAdapter adapter = new WordListAdapter(this);
+        final WordPageListAdapter pageListAdapter=new WordPageListAdapter(new DiffUtil.ItemCallback<Word>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull Word oldItem, @NonNull Word newItem) {
+                return oldItem.getId()==newItem.getId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull Word oldItem, @NonNull Word newItem) {
+                return oldItem.equals(newItem);
+            }
+        });
+
+
+        recyclerView.setAdapter(pageListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mWordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);
-        mWordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
+        mWordViewModel.getAllWords().observe(this, new Observer<PagedList<Word>>() {
             @Override
-            public void onChanged(List<Word> words) {
-                adapter.setWords(words);
+            public void onChanged(PagedList<Word> words) {
+                pageListAdapter.submitList(words);
             }
         });
 
@@ -88,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getAdapterPosition();
-                        Word myWord = adapter.getWordAtPosition(position);
+                        Word myWord = pageListAdapter.getWordAtPosition(position);
                         Toast.makeText(MainActivity.this, "Deleting " +
                                 myWord.getWord(), Toast.LENGTH_SHORT).show();
 
@@ -98,10 +114,10 @@ public class MainActivity extends AppCompatActivity {
                 });
         helper.attachToRecyclerView(recyclerView);
 
-        adapter.setOnItemClickListener(new WordListAdapter.ClickListener() {
+        pageListAdapter.setOnItemClickListener(new WordPageListAdapter.ClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Word word = adapter.getWordAtPosition(position);
+                Word word = pageListAdapter.getWordAtPosition(position);
                 Intent updateIntent = new Intent(MainActivity.this, NewWordActivity.class);
                 updateIntent.putExtra(UPDATE_INTENT, word.getWord());
                 updateIntent.putExtra(UPDATE_ID,word.getId());
